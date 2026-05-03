@@ -10,6 +10,9 @@ const Projects = () => {
   const [loading, setLoading] = useState(true);
   const [newProject, setNewProject] = useState({ name: "", description: "" });
   const [error, setError] = useState("");
+  
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isAdmin = user?.role === "ADMIN";
 
   const fetchProjects = async () => {
     try {
@@ -46,13 +49,15 @@ const Projects = () => {
           <h1 className="text-3xl font-bold">Projects</h1>
           <p className="text-slate-400 mt-1">Manage your team's ongoing initiatives.</p>
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-lg font-semibold transition-all shadow-lg shadow-blue-500/20 cursor-pointer"
-        >
-          <Plus className="h-5 w-5" />
-          Create Project
-        </button>
+        {isAdmin && (
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-lg font-semibold transition-all shadow-lg shadow-blue-500/20 cursor-pointer"
+          >
+            <Plus className="h-5 w-5" />
+            Create Project
+          </button>
+        )}
       </header>
 
       {loading ? (
@@ -110,13 +115,15 @@ const Projects = () => {
           <FolderOpen className="h-16 w-16 text-slate-600 mx-auto mb-4" />
           <h3 className="text-xl font-bold mb-2">No projects yet</h3>
           <p className="text-slate-400 mb-6">Get started by creating your first project.</p>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg font-semibold transition-all border border-white/5 cursor-pointer"
-          >
-            <Plus className="h-4 w-4" />
-            Create Project
-          </button>
+          {isAdmin && (
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg font-semibold transition-all border border-white/5 cursor-pointer"
+            >
+              <Plus className="h-4 w-4" />
+              Create Project
+            </button>
+          )}
         </div>
       )}
 

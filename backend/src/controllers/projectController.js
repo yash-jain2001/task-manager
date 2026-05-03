@@ -3,9 +3,7 @@ const Project = require("../models/Project");
 // Get all projects for logged in user
 exports.getProjects = async (req, res) => {
   try {
-    const projects = await Project.find({
-      $or: [{ owner: req.user.id }, { members: req.user.id }],
-    }).populate("owner", "name email");
+    const projects = await Project.find().populate("owner", "name email");
     res.json(projects);
   } catch (error) {
     res.status(500).json({ message: error.message });
