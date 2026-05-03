@@ -9,21 +9,23 @@ exports.getStats = async (req, res) => {
     const projectsCount = await Project.countDocuments();
 
     // Tasks counts
+    const taskQuery = { $or: [{ assignedTo: userId }, { createdBy: userId }] };
+    
     const todoTasks = await Task.countDocuments({
-      assignedTo: userId,
+      ...taskQuery,
       status: "TODO",
     });
     const inProgressTasks = await Task.countDocuments({
-      assignedTo: userId,
+      ...taskQuery,
       status: "IN_PROGRESS",
     });
     const doneTasks = await Task.countDocuments({
-      assignedTo: userId,
+      ...taskQuery,
       status: "DONE",
     });
 
     // Recent tasks
-    const recentTasks = await Task.find({ assignedTo: userId })
+    const recentTasks = await Task.find(taskQuery)
       .sort({ createdAt: -1 })
       .limit(5)
       .populate("project", "name");
