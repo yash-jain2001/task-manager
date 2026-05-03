@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import API from "../services/api";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, ArrowLeft, Calendar, Trash2, X } from "lucide-react";
+import { Plus, ArrowLeft, Calendar, Trash2, X, User, UserPlus } from "lucide-react";
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -10,18 +10,21 @@ const ProjectDetail = () => {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newTask, setNewTask] = useState({ title: "", description: "", status: "TODO" });
+  const [users, setUsers] = useState([]);
+  const [newTask, setNewTask] = useState({ title: "", description: "", status: "TODO", assignedTo: "" });
   const [error, setError] = useState("");
 
   const fetchData = async () => {
     try {
-      const [projectRes, tasksRes] = await Promise.all([
-        API.get(`/projects`), // ideally we'd have a GET /projects/:id endpoint, but we can filter from all for now
-        API.get(`/tasks/project/${id}`)
+      const [projectRes, tasksRes, usersRes] = await Promise.all([
+        API.get(`/projects`),
+        API.get(`/tasks/project/${id}`),
+        API.get(`/users`)
       ]);
       const currentProject = projectRes.data.find(p => p._id === id);
       setProject(currentProject);
       setTasks(tasksRes.data);
+      setUsers(usersRes.data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -39,7 +42,7 @@ const ProjectDetail = () => {
     try {
       await API.post("/tasks", { ...newTask, projectId: id });
       setIsModalOpen(false);
-      setNewTask({ title: "", description: "", status: "TODO" });
+      setNewTask({ title: "", description: "", status: "TODO", assignedTo: "" });
       fetchData();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create task");
@@ -125,7 +128,18 @@ const ProjectDetail = () => {
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
-                    <p className="text-sm text-slate-400 mb-4">{task.description}</p>
+                    <p className="text-sm text-slate-400 mb-4 grow">{task.description}</p>
+                    
+                    <div className="flex flex-col gap-2 mb-4 bg-slate-900/50 p-2 rounded-lg border border-white/5">
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <User className="h-3 w-3" />
+                        <span>Created by: <strong className="text-slate-300">{task.createdBy?.name || "Unknown"}</strong></span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <UserPlus className="h-3 w-3" />
+                        <span>Assigned to: <strong className="text-blue-400">{task.assignedTo?.name || "Unassigned"}</strong></span>
+                      </div>
+                    </div>
                     
                     <div className="flex items-center justify-between border-t border-white/5 pt-3 mt-auto">
                       <div className="flex items-center gap-2 text-xs text-slate-500">
@@ -215,6 +229,20 @@ const ProjectDetail = () => {
                     <option value="TODO">To Do</option>
                     <option value="IN_PROGRESS">In Progress</option>
                     <option value="DONE">Done</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Assign To</label>
+                  <select
+                    className="w-full bg-slate-800 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    value={newTask.assignedTo}
+                    onChange={(e) => setNewTask({ ...newTask, assignedTo: e.target.value })}
+                  >
+                    <option value="">Unassigned</option>
+                    {users.map(u => (
+                      <option key={u._id} value={u._id}>{u.name} ({u.email})</option>
+                    ))}
                   </select>
                 </div>
 
