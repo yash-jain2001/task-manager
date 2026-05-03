@@ -13,6 +13,9 @@ import { Link } from "react-router-dom";
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isAdmin = user?.role === "ADMIN";
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -37,10 +40,12 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold">Dashboard</h1>
           <p className="text-slate-400 mt-1">Here's what's happening with your projects today.</p>
         </div>
-        <Link to="/projects" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg font-semibold transition-all">
-          <Plus className="h-4 w-4" />
-          New Project
-        </Link>
+        {isAdmin && (
+          <Link to="/projects" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg font-semibold transition-all">
+            <Plus className="h-4 w-4" />
+            New Project
+          </Link>
+        )}
       </header>
 
       {/* Stats Grid */}

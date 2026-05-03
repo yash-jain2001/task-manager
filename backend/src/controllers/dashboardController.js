@@ -6,9 +6,7 @@ exports.getStats = async (req, res) => {
     const userId = req.user.id;
 
     // Projects count
-    const projectsCount = await Project.countDocuments({
-      $or: [{ owner: userId }, { members: userId }],
-    });
+    const projectsCount = await Project.countDocuments();
 
     // Tasks counts
     const todoTasks = await Task.countDocuments({
