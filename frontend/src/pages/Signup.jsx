@@ -12,7 +12,7 @@ const Signup = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await API.post("/auth/signup", formData);
+      await API.post("/auth/signup", formData);
       // Auto login after signup
       const loginRes = await API.post("/auth/login", {
         email: formData.email,
