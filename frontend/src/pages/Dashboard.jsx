@@ -76,9 +76,9 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="mt-8">
         {/* Recent Tasks */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">Recent Tasks</h2>
             <Link to="/projects" className="text-blue-500 hover:text-blue-400 text-sm flex items-center gap-1">
@@ -112,20 +112,6 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-
-        {/* Quick Tips or Something */}
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 shadow-xl relative overflow-hidden">
-          <div className="relative z-10">
-            <h3 className="text-xl font-bold mb-2">Team Collaboration</h3>
-            <p className="text-blue-100 mb-6">Assign tasks to your team members and track progress in real-time.</p>
-            <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-bold text-sm hover:bg-blue-50">
-              Invite Members
-            </button>
-          </div>
-          <div className="absolute -right-8 -bottom-8 opacity-20 transform rotate-12">
-            <FolderKanban size={160} />
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -144,24 +130,6 @@ const StatCard = ({ icon, label, value, color }) => (
       <p className="text-2xl font-bold">{value}</p>
     </div>
   </motion.div>
-);
-
-const FolderKanban = ({ size }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
-  >
-    <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
-    <path d="M8 10v4"/>
-    <path d="M12 10v2"/>
-    <path d="M16 10v6"/>
-  </svg>
 );
 
 export default Dashboard;
