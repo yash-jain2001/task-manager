@@ -13,7 +13,6 @@ function App() {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUser(JSON.parse(storedUser));
     }
   }, []);
@@ -26,9 +25,9 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-slate-900 text-white">
+      <div className="min-h-screen animated-bg text-white">
         {user && <Navbar user={user} logout={logout} />}
-        <main className={user ? "container mx-auto py-8 px-4" : ""}>
+        <main className={user ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" : ""}>
           <Routes>
             <Route path="/login" element={!user ? <Login setUser={setUser} /> : <Navigate to="/" />} />
             <Route path="/signup" element={!user ? <Signup setUser={setUser} /> : <Navigate to="/" />} />
