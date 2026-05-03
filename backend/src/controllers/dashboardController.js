@@ -9,7 +9,7 @@ exports.getStats = async (req, res) => {
     const projectsCount = await Project.countDocuments();
 
     // Tasks counts
-    const taskQuery = { $or: [{ assignedTo: userId }, { createdBy: userId }] };
+    const taskQuery = req.user.role === "ADMIN" ? {} : { $or: [{ assignedTo: userId }, { createdBy: userId }] };
     
     const todoTasks = await Task.countDocuments({
       ...taskQuery,
